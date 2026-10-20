@@ -1,0 +1,242 @@
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────────────────────────────────────
+   ZENITH'26 — DESIGN SYSTEM
+   Brand: Electric Blue #2600EA · Neon Pink #FF0259
+   Canvas: near-black ink / bone white editorial surfaces
+   Type: Wanted Sans Std (SIL OFL — wanteddev/wanted-sans)
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: "Wanted Sans Std";
+  src: url("/fonts/WantedSansStd-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Wanted Sans Std";
+  src: url("/fonts/WantedSansStd-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Wanted Sans Std";
+  src: url("/fonts/WantedSansStd-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Wanted Sans Std";
+  src: url("/fonts/WantedSansStd-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Wanted Sans Std";
+  src: url("/fonts/WantedSansStd-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Wanted Sans Std";
+  src: url("/fonts/WantedSansStd-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Wanted Sans Std", "Helvetica Neue", Arial, sans-serif;
+
+  --color-ink: #06060b;
+  --color-ink-2: #0b0b13;
+  --color-ink-3: #12121d;
+  --color-bone: #f4f2ed;
+  --color-bone-2: #eae7df;
+  --color-zenith-blue: #2600ea;
+  --color-zenith-pink: #ff0259;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-ink);
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-zenith-pink);
+  color: #fff;
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--color-zenith-pink);
+  outline-offset: 3px;
+}
+
+/* Smooth in-page anchors that clear the fixed nav */
+section[id],
+footer[id] {
+  scroll-margin-top: 5rem;
+}
+
+/* ── Brand utilities ─────────────────────────────────────────────────────── */
+
+.text-gradient {
+  background: linear-gradient(135deg, #2600ea 0%, #ff0259 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-brand {
+  background: linear-gradient(135deg, #2600ea 0%, #ff0259 100%);
+}
+
+/* Hero canvas: black owns the top, then a black→blue transition into the
+   brand sweep — blue → neon pink at the foot of the section. */
+.bg-gradient-hero {
+  background: linear-gradient(
+    180deg,
+    var(--color-ink) 0%,
+    var(--color-ink) 45%,
+    #2600ea 74%,
+    #ff0259 100%
+  );
+}
+
+
+.hairline-t {
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+}
+.hairline-b {
+  border-bottom: 1px solid rgb(255 255 255 / 0.14);
+}
+.hairline-ink-t {
+  border-top: 1px solid rgb(6 6 11 / 0.16);
+}
+.hairline-ink-b {
+  border-bottom: 1px solid rgb(6 6 11 / 0.16);
+}
+
+/* Uppercase micro-label used across the site */
+.label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Display headline tracking */
+.display {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+/* ── Motion primitives ───────────────────────────────────────────────────── */
+
+/* Crossing band marquees (SEC.02) — slow drift, deliberately unhurried */
+@keyframes band-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.animate-band-marquee {
+  animation: band-marquee 55s linear infinite;
+}
+.animate-band-marquee-rev {
+  animation: band-marquee 65s linear infinite reverse;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 90s linear infinite;
+}
+/* Faster spin for the hero's rotating register badge */
+.animate-spin-badge {
+  animation: spin-slow 10s linear infinite;
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+.animate-scroll-cue {
+  animation: scroll-cue 2.2s var(--ease-out-expo) infinite;
+}
+
+/* Blueprint grid backdrop */
+.bg-grid-dark {
+  background-image: linear-gradient(rgb(255 255 255 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+.bg-grid-light {
+  background-image: linear-gradient(rgb(6 6 11 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(6 6 11 / 0.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-band-marquee,
+  .animate-band-marquee-rev,
+  .animate-spin-slow,
+  .animate-spin-badge,
+  .animate-scroll-cue {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
