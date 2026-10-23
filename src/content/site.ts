@@ -20,7 +20,7 @@
 export const REGISTER_URL = "#";
 
 /** Zenith'26 countdown target. null → the countdown is not rendered. */
-export const COUNTDOWN_TARGET: string | null = null;
+export const COUNTDOWN_TARGET: string | null = "2026-12-17T00:00:00";
 // e.g. "2026-12-17T00:00:00" — set once the official Zenith'26 dates are announced.
 
 export const event = {

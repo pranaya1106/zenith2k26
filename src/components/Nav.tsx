@@ -55,10 +55,6 @@ export function Nav() {
               width={120}
               height={34}
             />
-            <span aria-hidden className="h-5 w-px bg-white/25" />
-            <span className="display text-sm tracking-tight md:text-base">
-              Zenith<span className="text-gradient">{"'26"}</span>
-            </span>
           </a>
 
           {/* Desktop links */}

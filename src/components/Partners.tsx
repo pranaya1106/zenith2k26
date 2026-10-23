@@ -12,7 +12,7 @@ const SPONSOR_TEASES = Array.from({ length: 6 }, (_, i) => i);
 export function Partners() {
   return (
     <section className="bg-ink text-white" aria-labelledby="partners-heading">
-      <div className="mx-auto max-w-[1600px] px-5 py-20 md:px-8 md:py-28">
+      <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-14">
         <FadeUp>
           <SectionLabel index="07" title="Partners" />
         </FadeUp>

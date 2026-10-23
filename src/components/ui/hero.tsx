@@ -9,50 +9,19 @@ import {
 } from "motion/react";
 import { ArrowDown, ArrowUpRight, Cloud, Trophy } from "lucide-react";
 import { REGISTER_URL, event, heroCards, links } from "../../content/site";
-import { GhostButton } from "../primitives";
-
-/* ──────────────────────────────────────────────────────────────────────────
+import { GhostButton } from "../primitives";/* ──────────────────────────────────────────────────────────────────────────
    ZENITH'26 — HERO (integrated from the supplied /components/ui/hero
-   reference, re-skinned to the Zenith identity: Wanted Sans at its
-   heaviest, electric blue #2600EA surface, neon pink #FF0259 accents,
-   deep-blue extruded type shadow instead of the reference's lime).
+   reference, re-skinned to the event poster's identity: Poppins at its
+   heaviest, a near-black canvas with a purple→magenta glow, the poster's
+   ZENITH wordmark (bolt + gradient letters + arrow) as the centrepiece,
+   and magenta/purple/indigo accents).
 
-   Concept: the event name becomes the backdrop — a three-line extruded
-   display stack (#SCOPE / ZENITH / '26) — with two frosted-glass cards
-   for the sub-events floating above it, hand-drawn accents, and a
-   rotating register badge. Pointer parallax gives the layers depth.
+   Concept: the supplied ZENITH 2026 poster lockup (bolt, gradient
+   letters, 'The Year of 2026', arrow) sits alone as the hero's
+   backdrop — with two frosted-glass cards for the sub-events floating
+   above it, hand-drawn accents, and a rotating register badge. Pointer
+   parallax gives the layers depth.
    ────────────────────────────────────────────────────────────────────────── */
-
-/** 3D extrusion: 14 stacked glyph copies (text-shadow can't hold a
- *  gradient), each filled with the SAME vertical brand ramp — blue at the
- *  top of the line → neon pink at the bottom — so the shadow reads as a
- *  vertical gradient across every edge it wraps, not a per-depth step. */
-const EXTRUDE_RAMP = "linear-gradient(180deg, #2600EA 0%, #FF0259 100%)";
-const EXTRUDE_OFFSETS = Array.from({ length: 14 }, (_, i) => i + 1);
-
-function ExtrudedText({ children }: { children: string }) {
-  return (
-    <>
-      {EXTRUDE_OFFSETS.map((dx) => (
-        <span
-          key={dx}
-          aria-hidden
-          className="pointer-events-none absolute inset-0 select-none"
-          style={{
-            transform: `translate(${dx}px, ${dx}px)`,
-            backgroundImage: EXTRUDE_RAMP,
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          {children}
-        </span>
-      ))}
-      <span className="relative">{children}</span>
-    </>
-  );
-}
 
 /* ── Hand-drawn accents (reference paths, re-skinned to neon pink) ─────── */
 
@@ -109,7 +78,7 @@ function Badge() {
             </defs>
             <text
               className="text-[9px] font-black uppercase tracking-[0.18em] md:text-[11px]"
-              fill="#FF0259"
+              fill="#FF1D8E"
             >
               {/* One clean revolution: textLength matches the circle's
                   circumference (2π × 36 ≈ 226) so the text never overlaps
@@ -137,9 +106,16 @@ function Badge() {
 /* ── Glass sub-event card ──────────────────────────────────────────────── */
 
 const CARD_ICONS = [Cloud, Trophy];
+/* Card slots: the lockup is 980px wide, so a floating card only fits
+   BESIDE the letters once the viewport has real side margins — xl
+   (1280px). Below xl the cards are hidden entirely (the lockup owns
+   the hero, as on the poster; the sub-events live in Program). At xl+
+   they sit in the outer pockets — lower-left past '2026', upper-right
+   past the arrow — with the letters' x-band (10%–90% of the image)
+   fully clear. */
 const CARD_SLOTS = [
-  "bottom-[-5%] left-[-4%] sm:left-[2%] md:bottom-[4%] md:left-[10%]",
-  "top-[-5%] right-[-4%] sm:right-[2%] md:top-[2%] md:right-[12%]",
+  "bottom-[-5%] left-[-4%] xl:bottom-[-16%] xl:left-[-11%]",
+  "top-[-5%] right-[-4%] xl:top-[0%] xl:right-[-11%]",
 ];
 const CARD_TILT = ["rotate-[-12deg]", "rotate-[12deg]"];
 
@@ -157,7 +133,7 @@ function GlassCard({
   const Icon = CARD_ICONS[index];
   return (
     <div
-      className={`absolute z-30 pointer-events-auto ${CARD_SLOTS[index]}`}
+      className={`absolute z-30 pointer-events-auto hidden xl:block ${CARD_SLOTS[index]}`}
     >
       <motion.div
         initial={reduced ? false : { opacity: 0, scale: 0.86 }}
@@ -180,7 +156,7 @@ function GlassCard({
           }}
         >
           <div
-            className={`group flex aspect-[3/3.6] w-32 flex-col items-center justify-center rounded-[2rem] border border-white/40 bg-white/20 p-3 shadow-2xl backdrop-blur-md transition-transform duration-500 hover:scale-[1.04] hover:!rotate-0 sm:w-40 sm:p-4 md:w-56 md:p-5 ${CARD_TILT[index]}`}
+            className={`group flex aspect-[3/3.6] w-32 flex-col items-center justify-center rounded-[2rem] border border-white/40 bg-white/20 p-3 shadow-2xl backdrop-blur-md transition-transform duration-500 hover:scale-[1.04] hover:!rotate-0 sm:w-40 sm:p-4 xl:w-48 xl:p-5 ${CARD_TILT[index]}`}
           >
             <div className="mb-2.5 flex size-11 items-center justify-center rounded-full border-[3px] border-white/60 bg-white shadow-[inset_0_2px_8px_rgba(6,6,11,0.14)] sm:mb-3 sm:size-14 md:mb-4 md:size-20">
               <Icon
@@ -228,12 +204,8 @@ export const Component = () => {
   const sx = useSpring(mx, { stiffness: 60, damping: 18, mass: 0.6 });
   const sy = useSpring(my, { stiffness: 60, damping: 18, mass: 0.6 });
 
-  const l1x = useTransform(sx, (v) => v * 12);
-  const l1y = useTransform(sy, (v) => v * 5);
   const l2x = useTransform(sx, (v) => v * 7);
   const l2y = useTransform(sy, (v) => v * 4);
-  const l3x = useTransform(sx, (v) => v * 16);
-  const l3y = useTransform(sy, (v) => v * 7);
   const c0x = useTransform(sx, (v) => v * -20);
   const c0y = useTransform(sy, (v) => v * -12);
   const c1x = useTransform(sx, (v) => v * -26);
@@ -265,23 +237,16 @@ export const Component = () => {
         className="absolute inset-0 z-0 bg-grid-dark pointer-events-none"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1600px] flex-col px-5 pt-24 pb-8 md:px-8 md:pt-28">
-        {/* Top metadata rail */}
-        <motion.div
-          initial={reduced ? undefined : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.15 }}
-          className="label flex flex-wrap items-center gap-x-6 gap-y-2 text-white/65 hairline-b pb-2"
-        >
-          <span className="text-white">SCOPE Club Presents</span>
-          <span aria-hidden className="hidden h-3 w-px bg-white/30 sm:block" />
-          <span>{event.tagline}</span>
-          <span className="ml-auto hidden text-white/50 sm:inline">
-            {event.instituteShort} · {event.city}
-          </span>
-        </motion.div>
+      {/* Layer 2 — the field recedes into space under the fold, so the next
+          section begins in the same darkness the hero ends in. Sits above the
+          gradient and below the content, so the type and buttons stay crisp. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[46vh] bg-[linear-gradient(to_bottom,transparent_0%,rgba(6,6,11,0.35)_38%,rgba(6,6,11,0.82)_72%,#06060b_100%)]"
+      />
 
-        {/* Extruded display stack + floating overlays */}
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1600px] flex-col px-5 pt-24 pb-8 md:px-8 md:pt-28">
+        {/* Poster lockup + floating overlays */}
         <div className="relative flex flex-1 items-center py-5 md:py-7">
           <div className="relative mx-auto w-full max-w-5xl">
             <h1 className="sr-only">
@@ -292,37 +257,16 @@ export const Component = () => {
             <motion.div
               aria-hidden
               style={{ y: typeY }}
-              className="flex flex-col gap-1 md:gap-2"
+              className="flex flex-col"
             >
-              {/* #SCOPE */}
-              <div className="relative flex justify-start pl-[8%] md:pl-[24%]">
-                <motion.div
-                  className="overflow-hidden pr-4 pb-4"
-                  style={{ x: l1x, y: l1y }}
-                >
-                  <motion.span
-                    className="relative block text-[clamp(3.5rem,11vw,150px)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white"
-                    initial={reduced ? false : { y: "135%" }}
-                    animate={{ y: "0%" }}
-                    transition={{
-                      duration: 1,
-                      delay: 0.12,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    <ExtrudedText>#Scope</ExtrudedText>
-                  </motion.span>
-                </motion.div>
-              </div>
-
-              {/* ZENITH */}
+              {/* ZENITH 2026 — the supplied poster lockup, used exactly as-is */}
               <div className="relative flex justify-center">
                 <motion.div
-                  className="overflow-hidden pr-4 pb-4"
+                  className="overflow-hidden"
                   style={{ x: l2x, y: l2y }}
                 >
-                  <motion.span
-                    className="relative block text-[clamp(5rem,15vw,225px)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white"
+                  <motion.div
+                    className="relative"
                     initial={reduced ? false : { y: "135%" }}
                     animate={{ y: "0%" }}
                     transition={{
@@ -331,29 +275,15 @@ export const Component = () => {
                       ease: [0.16, 1, 0.3, 1],
                     }}
                   >
-                    <ExtrudedText>{event.name}</ExtrudedText>
-                  </motion.span>
-                </motion.div>
-              </div>
-
-              {/* '26 */}
-              <div className="relative flex justify-end pr-[4%] md:pr-[10%]">
-                <motion.div
-                  className="overflow-hidden pr-4 pb-4"
-                  style={{ x: l3x, y: l3y }}
-                >
-                  <motion.span
-                    className="relative block text-[clamp(4rem,13vw,185px)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white"
-                    initial={reduced ? false : { y: "135%" }}
-                    animate={{ y: "0%" }}
-                    transition={{
-                      duration: 1.1,
-                      delay: 0.36,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    <ExtrudedText>{event.year}</ExtrudedText>
-                  </motion.span>
+                    <img
+                      src="/img/zenith-lockup.png"
+                      alt=""
+                      width={2765}
+                      height={1257}
+                      draggable={false}
+                      className="block w-[min(92vw,980px)] drop-shadow-[0_18px_50px_rgba(166,50,224,0.35)]"
+                    />
+                  </motion.div>
                 </motion.div>
               </div>
             </motion.div>
@@ -380,7 +310,7 @@ export const Component = () => {
                 initial={reduced ? undefined : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.7 }}
-                className="absolute bottom-[-8%] left-0 z-20 hidden w-20 sm:block md:left-[4%] md:w-28"
+                className="absolute bottom-[-8%] left-0 z-20 hidden w-20 sm:block md:left-[4%] md:w-28 xl:left-[15%]"
               >
                 <ArrowPinkLeft />
               </motion.div>
@@ -388,7 +318,7 @@ export const Component = () => {
                 initial={reduced ? undefined : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="absolute top-[-4%] right-0 z-20 hidden w-20 sm:block md:right-[3%] md:w-28"
+                className="absolute top-[-4%] right-0 z-20 hidden w-20 sm:block md:right-[3%] md:w-28 xl:top-[62%] xl:right-[-10%]"
               >
                 <ArrowPinkRight />
               </motion.div>
@@ -398,48 +328,32 @@ export const Component = () => {
           </div>
         </div>
 
-        {/* Bottom: intro + actions + dates */}
+        {/* Bottom: actions + scroll cue */}
         <motion.div
           initial={reduced ? undefined : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          className="grid gap-8 border-t border-white/30 pt-5 md:grid-cols-12 md:gap-10"
+          className="flex flex-col items-center gap-4 border-t border-white/25 pt-6 text-center md:gap-5"
         >
-          <p className="max-w-md text-base leading-relaxed text-white/90 md:col-span-5 md:text-lg">
-            {event.shortIntro}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 md:col-span-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <GhostButton href="#brief">Explore the Event</GhostButton>
+            <a
+              href={links.problemStatements}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="label inline-flex items-center gap-1 text-white/85 underline decoration-white/60 decoration-2 underline-offset-4 transition-colors hover:text-white"
+            >
+              Problem Statements
+              <ArrowUpRight className="size-3" strokeWidth={2.5} />
+            </a>
           </div>
 
-          <div className="flex items-start md:col-span-3 md:justify-end">
-            <div className="flex flex-col gap-2 md:items-end">
-              <div className="flex items-center gap-3">
-                <span aria-hidden className="size-2 bg-white" />
-                <span className="display text-2xl text-white md:text-3xl">
-                  {event.datesLabel}
-                </span>
-              </div>
-              <span className="label text-white/90">{event.venueLine}</span>
-              <a
-                href={links.problemStatements}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="label inline-flex items-center gap-1 text-white/90 underline decoration-white decoration-2 underline-offset-4 transition-colors hover:text-white"
-              >
-                Problem Statements
-                <ArrowUpRight className="size-3" strokeWidth={2.5} />
-              </a>
-            </div>
+          {/* Scroll cue */}
+          <div className="mt-1 flex items-center gap-3 text-white/75">
+            <ArrowDown className="size-4 animate-bounce" aria-hidden />
+            <span className="label">Scroll</span>
           </div>
         </motion.div>
-
-        {/* Scroll cue */}
-        <div className="mt-3 flex items-center gap-3 text-white/80">
-          <ArrowDown className="size-4 animate-bounce" aria-hidden />
-          <span className="label">Scroll</span>
-        </div>
       </div>
     </section>
   );

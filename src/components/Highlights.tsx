@@ -1,39 +1,86 @@
 import { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import { highlights, whyJoin } from "../content/site";
 import { FadeUp, Reveal, SectionLabel } from "./primitives";
 
-/* One ribbon's content — the three reasons, duplicated by the caller for a
-   seamless loop. Title in display caps, body trailing inline. */
-function bandRow(tone: "brand" | "light") {
+/* ── The three reasons, as one rotating statement ────────────────────────
+   A single oversized line cycles through the verbs while its note swaps
+   beside it — typography instead of another card grid. */
+
+function ReasonLine() {
+  const [index, setIndex] = useState(0);
+  const reduced = useReducedMotion();
+  const active = whyJoin[index];
+
+  useEffect(() => {
+    if (reduced) return;
+    const id = window.setInterval(
+      () => setIndex((v) => (v + 1) % whyJoin.length),
+      4600,
+    );
+    return () => window.clearInterval(id);
+  }, [reduced]);
+
   return (
-    <div className="flex shrink-0 items-center">
-      {whyJoin.map((w, i) => (
-        <span key={w.title} className="flex items-baseline">
-          {i > 0 && (
-            <span
-              aria-hidden
-              className={`mx-5 size-2 shrink-0 rounded-full md:mx-8 md:size-2.5 ${
-                tone === "brand" ? "bg-white/70" : "bg-gradient-brand"
-              }`}
-            />
-          )}
-          <span
-            className={`display text-[7vw] leading-none whitespace-nowrap md:text-[2.4vw] ${
-              tone === "brand" ? "text-white" : "text-ink"
-            }`}
-          >
-            {w.title}
-          </span>
-          <span
-            className={`ml-3 text-[3.4vw] leading-none whitespace-nowrap md:ml-4 md:text-[1.2vw] ${
-              tone === "brand" ? "text-white/85" : "text-ink/65"
-            }`}
-          >
-            {w.body}
-          </span>
-        </span>
-      ))}
+    <div className="mx-auto max-w-[1600px] px-5 pb-16 md:px-8 md:pb-20">
+      <div className="grid gap-8 border-t border-white/12 pt-10 md:grid-cols-12 md:items-end md:gap-10 md:pt-14">
+        <div className="md:col-span-7">
+          <span className="label text-white/40">Because you get to</span>
+          <div className="display relative mt-3 h-[1.18em] overflow-hidden text-[12vw] leading-[1.18] md:text-[5.6vw]">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={active.title}
+                initial={reduced ? false : { y: "110%" }}
+                animate={{ y: 0 }}
+                exit={reduced ? { opacity: 0 } : { y: "-110%" }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-x-0 bottom-0 whitespace-nowrap text-white"
+              >
+                {active.title}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <div className="md:col-span-4 md:col-start-9">
+          <div className="min-h-[4.5em]">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p
+                key={active.title}
+                initial={reduced ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="text-sm leading-relaxed text-white/55 md:text-base"
+              >
+                {active.body}
+              </motion.p>
+            </AnimatePresence>
+          </div>
+
+          {/* Three rules that mark the cycle — click to jump */}
+          <div className="mt-6 flex gap-2">
+            {whyJoin.map((w, i) => (
+              <button
+                key={w.title}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={`Show ${w.title}`}
+                aria-current={i === index}
+                className="group flex-1 cursor-pointer py-2"
+              >
+                <span
+                  className={`block h-px w-full transition-colors duration-500 ${
+                    i === index
+                      ? "bg-gradient-brand"
+                      : "bg-white/20 group-hover:bg-white/40"
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -77,7 +124,7 @@ function Counter({ value, duration = 1400 }: { value: number; duration?: number 
 export function Highlights() {
   return (
     <section className="relative bg-ink text-white" aria-labelledby="highlights-heading">
-      <div className="mx-auto max-w-[1600px] px-5 pt-20 md:px-8 md:pt-32">
+      <div className="mx-auto max-w-[1600px] px-5 pt-14 md:px-8 md:pt-14">
         <FadeUp>
           <SectionLabel index="02" title="By the Numbers" />
         </FadeUp>
@@ -121,24 +168,9 @@ export function Highlights() {
         </div>
       </div>
 
-      {/* Crossing bands — both ribbons share one centre axis and tilt in
-          opposite directions, so they intersect into an X mid-viewport */}
-      <div className="relative mt-4 h-[22vw] max-h-[20rem] min-h-[12rem] overflow-hidden md:mt-8">
-        {/* Band 1 — brand gradient, rises to the right */}
-        <div className="absolute top-1/2 -left-[10%] w-[120%] -translate-y-1/2 -rotate-[6deg] overflow-hidden bg-gradient-brand py-4 shadow-[0_18px_50px_rgba(6,6,11,0.45)] md:py-6">
-          <div className="flex w-max animate-band-marquee">
-            {bandRow("brand")}
-            {bandRow("brand")}
-          </div>
-        </div>
-
-        {/* Band 2 — bone white, falls to the right, rides on top at the crossing */}
-        <div className="absolute top-1/2 -left-[10%] z-10 w-[120%] -translate-y-1/2 rotate-[6deg] overflow-hidden bg-white py-4 shadow-[0_18px_50px_rgba(6,6,11,0.45)] md:py-6">
-          <div className="flex w-max animate-band-marquee-rev">
-            {bandRow("light")}
-            {bandRow("light")}
-          </div>
-        </div>
+      {/* One rotating line — the reasons read as a statement, not a grid */}
+      <div className="pt-12 md:pt-16">
+        <ReasonLine />
       </div>
     </section>
   );

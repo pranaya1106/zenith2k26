@@ -1,6 +1,6 @@
 import { Nav } from "./components/Nav";
 import { Hero } from "./components/Hero";
-import { Brief } from "./components/Brief";
+import { Voyage } from "./components/ui/voyage";
 import { Highlights } from "./components/Highlights";
 import { Domains } from "./components/Domains";
 import { Program } from "./components/Program";
@@ -13,7 +13,7 @@ import { Footer } from "./components/Footer";
 
 /* ──────────────────────────────────────────────────────────────────────────
    ZENITH'26 — SCOPE Club, MLR Institute of Technology
-   Section rhythm: ink → bone → ink → bone … ending on the brand gradient.
+   Section rhythm: one continuous ink field, closing on the brand gradient.
    ────────────────────────────────────────────────────────────────────────── */
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Brief />
+        <Voyage />
         <Highlights />
         <Domains />
         <Program />

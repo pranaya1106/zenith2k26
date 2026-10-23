@@ -43,7 +43,7 @@ export function Finale() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1600px] px-5 py-24 md:px-8 md:py-36">
+      <div className="relative mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
         <FadeUp>
           <p className="label text-white/70">
             {event.tagline} · {event.organizer}

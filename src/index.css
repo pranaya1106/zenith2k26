@@ -2,64 +2,65 @@
 
 /* ────────────────────────────────────────────────────────────────────────────
    ZENITH'26 — DESIGN SYSTEM
-   Brand: Electric Blue #2600EA · Neon Pink #FF0259
-   Canvas: near-black ink / bone white editorial surfaces
-   Type: Wanted Sans Std (SIL OFL — wanteddev/wanted-sans)
+   Brand ramp (per the event poster): Magenta #FF1D8E → Purple #A632E0
+   → Indigo #4426E0 on a near-black canvas.
+   Type: Poppins (SIL OFL — the poster's geometric grotesque), self-hosted.
    ──────────────────────────────────────────────────────────────────────────── */
 
 @font-face {
-  font-family: "Wanted Sans Std";
-  src: url("/fonts/WantedSansStd-Regular.woff2") format("woff2");
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-400.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Wanted Sans Std";
-  src: url("/fonts/WantedSansStd-Medium.woff2") format("woff2");
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-500.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Wanted Sans Std";
-  src: url("/fonts/WantedSansStd-SemiBold.woff2") format("woff2");
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-600.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Wanted Sans Std";
-  src: url("/fonts/WantedSansStd-Bold.woff2") format("woff2");
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-700.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Wanted Sans Std";
-  src: url("/fonts/WantedSansStd-ExtraBold.woff2") format("woff2");
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-800.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Wanted Sans Std";
-  src: url("/fonts/WantedSansStd-Black.woff2") format("woff2");
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-900.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  --font-sans: "Wanted Sans Std", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Poppins", "Wanted Sans Std", "Helvetica Neue", Arial, sans-serif;
 
   --color-ink: #06060b;
   --color-ink-2: #0b0b13;
   --color-ink-3: #12121d;
   --color-bone: #f4f2ed;
   --color-bone-2: #eae7df;
-  --color-zenith-blue: #2600ea;
-  --color-zenith-pink: #ff0259;
+  --color-zenith-blue: #4426e0;
+  --color-zenith-purple: #a632e0;
+  --color-zenith-pink: #ff1d8e;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -97,27 +98,26 @@ footer[id] {
 
 /* ── Brand utilities ─────────────────────────────────────────────────────── */
 
+/* The poster's ramp: magenta (left) → purple → indigo (right) */
 .text-gradient {
-  background: linear-gradient(135deg, #2600ea 0%, #ff0259 100%);
+  background: linear-gradient(90deg, #ff1d8e 0%, #a632e0 50%, #4426e0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .bg-gradient-brand {
-  background: linear-gradient(135deg, #2600ea 0%, #ff0259 100%);
+  background: linear-gradient(90deg, #ff1d8e 0%, #a632e0 50%, #4426e0 100%);
 }
 
-/* Hero canvas: black owns the top, then a black→blue transition into the
-   brand sweep — blue → neon pink at the foot of the section. */
+/* Hero canvas: the poster's deep black field, with a purple→magenta glow
+   rising from the foot and a cool aurora in the top-left corner. */
 .bg-gradient-hero {
-  background: linear-gradient(
-    180deg,
-    var(--color-ink) 0%,
-    var(--color-ink) 45%,
-    #2600ea 74%,
-    #ff0259 100%
-  );
+  background:
+    radial-gradient(60% 45% at 12% 0%, rgb(68 38 224 / 0.30) 0%, transparent 62%),
+    radial-gradient(120% 62% at 50% 112%, #a632e0 0%, rgb(166 50 224 / 0.45) 32%, transparent 64%),
+    radial-gradient(70% 40% at 50% 106%, #ff1d8e 0%, transparent 55%),
+    var(--color-ink);
 }
 
 
